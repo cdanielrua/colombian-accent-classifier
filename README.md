@@ -47,6 +47,23 @@ Cada audio se reduce a un vector único de 26 dimensiones mediante **Pooling Est
 | **Media ($\mu$)** | Representa el **Timbre Estático**. Indica la configuración promedio de la boca y la resonancia base del hablante. |
 | **Desviación Estándar ($\sigma$)** | Representa la **Prosodia y Dinámica**. Captura el "cantadito" o ritmo del acento (ej. la alta variabilidad tonal del acento paisa vs. la planitud del rolo). |
 
+
+### 5. Algoritmo de Clasificación: Centroides y Distancia Coseno
+
+El sistema no utiliza redes neuronales ("cajas negras"), sino un enfoque geométrico basado en prototipos. La decisión se toma siguiendo este procedimiento:
+
+1.  **Entrenamiento (Cálculo de Centroides):**
+    Para cada grupo de acentos (Clase $C$), se calcula un vector promedio maestro o **Centroide** ($\vec{\mu}_C$) promediando los vectores de características de todos los sujetos de entrenamiento de esa región.
+    * Esto genera un "Paisa Ideal", un "Rolo Ideal" y un "Costeño Ideal" en el espacio vectorial de 26 dimensiones.
+
+2.  **Inferencia (Predicción):**
+    Al llegar un nuevo audio de prueba desconocida ($\vec{x}$):
+    * Se calcula la **Distancia Coseno** entre $\vec{x}$ y cada uno de los tres centroides ($\vec{\mu}_{Paisa}, \vec{\mu}_{Rolo}, \vec{\mu}_{Costeño}$).
+    * El sistema clasifica el audio asignándolo a la clase cuyo centroide esté a la **menor distancia** (es decir, el vector con mayor similitud angular).
+
+![Diagrama del proceso](images/proceso.png)
+
+
 ---
 
 ## 📂 Estructura del Proyecto
@@ -78,7 +95,7 @@ El modelo demuestra que no son necesarios algoritmos complejos de Deep Learning 
 ## 📈 Visualización de Distancias
 El sistema utiliza la Distancia Coseno para comparar el vector de entrada con los centroides de cada acento.
 
-![alt text](image.png)
+![resultado de la media de distancias](images/resultado.png)
 
 ### 🔮 Trabajo Futuro
 Para escalar este proyecto a un entorno de producción:
